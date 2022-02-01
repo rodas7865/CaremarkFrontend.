@@ -1,0 +1,9 @@
+main{
+    background: #f3f4f6;
+    grid-area:main;
+    overflow-y: auto;
+}
+.calendar_content{
+ 
+    padding:30px 35px;
+}
