@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import '../Calendar/calendar.css'
 import interactionPlugin from '@fullcalendar/interaction'
 
-export default class DemoApp extends React.Component {
+export default class Calendar extends React.Component {
 
     constructor(props) {
         super(props);

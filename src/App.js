@@ -1,12 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
 import NavBar from './components/NavBar/NavBar.js'
 import React, { useState } from 'react';
 import SideBar from './components/SideBar/SideBar';
-import DashboardAdmin from './components/Dashboard_admin/DashboardAdmin';
-import DemoApp from './components/Calendar/Calendar';
+import Content from './components/Content';
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 
 
 class App extends React.Component {
@@ -22,10 +20,11 @@ class App extends React.Component {
   render() {
     return (
       <div className="container">
-        <NavBar></NavBar>
-        <DemoApp></DemoApp>
-        <SideBar></SideBar>
-
+          <Router>
+            <NavBar></NavBar>
+            <Content></Content>
+            <SideBar></SideBar>
+          </Router>
       </div>
     );
   }
