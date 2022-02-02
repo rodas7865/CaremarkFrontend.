@@ -37,6 +37,7 @@ class App extends React.Component {
             await api.loginUser(data)
             localStorage.getItem('authorization')
             console.log(localStorage.getItem('authorization'))
+            this.props.navigate('/calendar')
         }catch (err){
             this.setState({error:"Password ou Email errado"})
         }
