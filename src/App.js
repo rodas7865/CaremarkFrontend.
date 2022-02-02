@@ -7,7 +7,7 @@ import Login from '../src/components/login/login'
 
 
 
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
 
 
 class App extends React.Component {
@@ -29,7 +29,10 @@ class App extends React.Component {
     return (
       <div className="container">
         <Router>
-          <Login path="/users/login"></Login>
+          <Routes>
+            <Route exact path={'/users/login'} element={<Login path="/users/login"></Login>}/>
+            <Route exact path={'/calendar'} element={<Content></Content>}/>
+          </Routes>
           {/* <NavBar></NavBar>
           <Content></Content>
           <SideBar></SideBar> */}

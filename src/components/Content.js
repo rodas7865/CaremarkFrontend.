@@ -13,10 +13,9 @@ export default class Content extends React.Component {
 
     render() {
         return (
-            <Routes>
-                <Route exact path={'/login'} element={<Login></Login>}/>
-                <Route exact path={'/calendar'} element={<Calendar></Calendar>}/>
-            </Routes>
+            <div>
+                <Calendar></Calendar>
+            </div>
         );
     }
 
