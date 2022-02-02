@@ -19,47 +19,52 @@ class Calendar extends React.Component {
             popup:false,
             escalas:[],
             info:null,
-            users:[]
+            users:[],
+            selected: null,
+            loading:true
         }
     }
 
-    async componentDidMount() {
+     async componentDidMount() {
+
          const getUsers = (await api.getUsers()==='Acesso Negado')?(this.props.navigate('/')):(await api.getUsers())
          const getEscalas = (await api.getEscalas()==='Acesso Negado')?(this.props.navigate('/')):(await api.getEscalas())
          let escalas=[],
          users=[]
 
-         getEscalas.map( async (result) => {
+         await getEscalas.map( async (result) => {
+             let nomeCompleto =await api.getUser(result.user_id).then(result=>{return result.nome + " " + result.sobrenome})
 
              let escala = {
-                 id:result.id,
-                 title: await api.getUser(result.user_id).then(result=>{return result.nome + " " + result.sobrenome}),
+                 id:result._id,
+                 title: nomeCompleto,
                  start: result.inicio,
                  end:result.fim
              }
              escalas.push(escala)
          })
 
-         getUsers.map( (result) => {
+         await getUsers.map( (result) => {
 
              let user = {
-                 value:result.id,
+                 value:result._id,
                  label:result.nome + " " + result.sobrenome
              }
              users.push(user)
          })
-         console.log(getEscalas)
-         console.log(getUsers)
-         this.setState({
-             escalas:escalas,
-             users:users
+
+          this.setState({
+             escalas,
+             users,
+             loading:false
          })
+        console.log(this.state.escalas)
      }
 
     select = (info) => {
         this.setState({
             popup:true,
-            info:info,
+            selected:info.startStr,
         })
     }
 
@@ -70,40 +75,46 @@ class Calendar extends React.Component {
     }
 
     render() {
-        return (
+            if(this.state.loading){
+                return (<> loading </>)
+            }else{
+                return (
 
-            <main className='calendar_content'>
+                    <main className='calendar_content'>
 
-                <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                    select={(info)=>{
-                        this.select(info)
-                    }}
-                    initialView="timeGridWeek"
-                    headerToolbar={{
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'timeGridWeek'
-                    }}
-                    editable={true}
-                    selectable={true}
-                    selectMirror={true}
-                    dayMaxEvents={true}
-                    events={this.state.escalas}
-                />
-                <Popup open={this.state.popup===true} onClose={this.close} modal >
-                    <h1 className={'Titulo'}>Nova Escala</h1>
-                    <hr className={'Separator'}/>
-                    <form>
-                        <Select
-                            closeMenuOnSelect={false}
-                            isMulti
-                            options={this.state.users}
+                        <FullCalendar
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                            select={(info)=>{
+                                this.select(info)
+                            }}
+                            initialView="timeGridWeek"
+                            headerToolbar={{
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'timeGridWeek'
+                            }}
+                            editable={true}
+                            selectable={true}
+                            selectMirror={true}
+                            dayMaxEvents={true}
+                            events={this.state.escalas || []}
                         />
-                    </form>
-                </Popup>
-            </main>
-        )
+                        <Popup open={this.state.popup===true} onClose={this.close} modal >
+                            <h1 className={'Titulo'}>Nova Escala</h1>
+                            <hr className={'Separator'}/>
+                            <p>{this.state.selected}</p>
+                            <form>
+                                <Select
+                                    closeMenuOnSelect={false}
+                                    isMulti
+                                    options={this.state.users}
+                                />
+                            </form>
+                        </Popup>
+                    </main>
+                )
+            }
+
     }
 
 }

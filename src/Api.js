@@ -1,4 +1,4 @@
-const   BASE_URL = 'https://caremark.herokuapp.com/'
+const   BASE_URL = 'http://localhost:8080/'//'https://caremark.herokuapp.com/'
 
 export default {
     
