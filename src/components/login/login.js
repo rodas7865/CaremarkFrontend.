@@ -11,6 +11,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            error:"",
             form_login: {
                 email: "",
                 password: ""
@@ -31,11 +32,13 @@ class App extends React.Component {
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
 
-        await api.loginUser(data)
-        localStorage.getItem('authorization')
-        console.log(localStorage.getItem('authorization'))
-
-
+        try{
+            await api.loginUser(data)
+            localStorage.getItem('authorization')
+            console.log(localStorage.getItem('authorization'))
+        }catch (err){
+            this.setState({error:"Password ou Email errado"})
+        }
     }
    
 
@@ -53,6 +56,7 @@ class App extends React.Component {
                                 <i class=""></i>
                                 <input type="password" name='password' value={this.state.form_login.password} class="login__input" placeholder="Palavra-Passe" onChange={(e) => this.updateField(e)}></input>
                             </div>
+                            <p className={'ErrorMensage'}>{(this.state.error==="")?(""):(this.state.error)}</p>
                             <button onClick={this.submit} class="button login__submit">
                                 <span class="button__text">Login</span>
                                 <i class=""></i>

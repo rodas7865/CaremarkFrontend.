@@ -13,6 +13,10 @@ body {
             background-repeat: no-repeat;
 }
 
+.ErrorMensage{
+	padding: 20px 0px;
+	color: #ff0707;
+}
 .container {
 	align-items: center;
 	justify-content: center;
