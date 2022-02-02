@@ -1,4 +1,4 @@
-const   BASE_URL = 'https://caremark.herokuapp.com'
+const   BASE_URL = 'https://caremark.herokuapp.com/'
 
 export default {
     
@@ -104,13 +104,15 @@ export default {
             method:'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'authorization': 'BEARER ' + localStorage.getItem('token')
             },
             body:JSON.stringify(body)
         })
-        let data = await response.header('authorization')
+        let data = response.headers.get('authorization')
 
-        localStorage.setItem('authorization',data)
+        console.log(data)
+        localStorage.setItem('token',data)
         return data
     },
     registerUser: async function(body){

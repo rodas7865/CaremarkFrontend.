@@ -1,7 +1,7 @@
 
 import '../login/login.css'
 import React, { useState } from 'react';
-import {loginUser} from '../../Api';
+import api from '../../Api';
 
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -26,14 +26,14 @@ class App extends React.Component {
         this.setState({ form_login });
     }
 
-    submit=(e,)=>{
+    submit=async (e,)=>{
         e.preventDefault();
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
-        console.log(data)
-        loginUser()
-        localStorage.getItem('token')
-        console.log(localStorage.getItem('token'))
+
+        await api.loginUser(data)
+        localStorage.getItem('authorization')
+        console.log(localStorage.getItem('authorization'))
 
 
     }
