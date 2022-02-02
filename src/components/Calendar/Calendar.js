@@ -4,15 +4,38 @@ import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
 import '../Calendar/calendar.css'
 import interactionPlugin from '@fullcalendar/interaction'
+import api from '../../Api.js'
+import {withRouter} from "../hooks";
 
-export default class Calendar extends React.Component {
+class Calendar extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state={
 
+            escalas:[]
         }
+    }
+
+    async componentDidMount() {
+        const getEscalas = (await api.getEscalas()==='Acesso Negado')?(this.props.navigate('/')):(await api.getEscalas())
+        let escalas=[]
+
+        getEscalas.map( async (result) => {
+
+            let escala = {
+                id:result.id,
+                title: await api.getUser(result.user_id).then(result=>{return result.nome + " " + result.sobrenome}),
+                start: result.inicio,
+                end:result.fim
+            }
+            escalas.push(escala)
+        })
+        console.log(getEscalas)
+        this.setState({
+            escalas:escalas
+        })
     }
 
     select = () => {
@@ -40,10 +63,7 @@ export default class Calendar extends React.Component {
                     selectable={true}
                     selectMirror={true}
                     dayMaxEvents={true}
-                    events={[
-                        { title: 'event 1', date: '2022-01-18' },
-                        { title: 'event 2', date: '2019-04-02' }
-                    ]}
+                    events={this.state.escalas}
                 />
             </main>
         )
@@ -51,3 +71,4 @@ export default class Calendar extends React.Component {
 
 }
 
+export default withRouter(Calendar)

@@ -12,7 +12,6 @@ class App extends React.Component {
     super(props);
     this.state = {
 
-
     };
 
 
@@ -27,7 +26,7 @@ class App extends React.Component {
       <div className="container">
         <Router>
           <Routes>
-            <Route exact path={'/users/login'} element={<Login path="/users/login"></Login>}/>
+            <Route path={"*"} element={<Login path="/users/login"></Login>}/>
             <Route exact path={'/calendar'} element={<Calendar></Calendar>}/>
           </Routes>
           {/* <NavBar></NavBar>
