@@ -30,7 +30,6 @@ class App extends React.Component {
         e.preventDefault();
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
-
         await api.loginUser(data)
         localStorage.getItem('authorization')
         console.log(localStorage.getItem('authorization'))
