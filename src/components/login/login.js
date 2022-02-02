@@ -1,6 +1,7 @@
 
 import '../login/login.css'
 import React, { useState } from 'react';
+import {loginUser} from '../../Api';
 
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -10,27 +11,49 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            form_login: {
+                email: "",
+                password: ""
             }
+        }
 
 
     }
+
+    updateField = (e) => {
+        var form_login = this.state.form_login;
+        form_login[e.target.name] = e.target.value;
+        this.setState({ form_login });
+    }
+
+    submit=(e,)=>{
+        e.preventDefault();
+        const data={email:this.state.form_login.email,password:this.state.form_login.password
+        }
+        console.log(data)
+        loginUser()
+        localStorage.getItem('token')
+        console.log(localStorage.getItem('token'))
+
+
+    }
+   
 
     render() {
         return (
             <div class="container">
                 <div class="screen">
                     <div class="screen__content">
-                        <form class="login">
+                        <form class="login" onSubmit={this.submit}>
                             <div class="login__field">
                                 <i class=""></i>
-                                <input type="text" name='' class="login__input" placeholder="Utilizador/Email"></input>
+                                <input type="text" name='email' value={this.state.form_login.email} class="login__input" placeholder="Utilizador/Email" onChange={(e) => this.updateField(e)}></input>
                             </div>
                             <div class="login__field">
                                 <i class=""></i>
-                                <input type="password" name='' class="login__input" placeholder="Palavra-Passe"></input>
+                                <input type="password" name='password' value={this.state.form_login.password} class="login__input" placeholder="Palavra-Passe" onChange={(e) => this.updateField(e)}></input>
                             </div>
-                            <button class="button login__submit">
+                            <button onClick={this.submit} class="button login__submit">
                                 <span class="button__text">Login</span>
                                 <i class=""></i>
                             </button>
