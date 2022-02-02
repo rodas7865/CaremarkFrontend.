@@ -17,7 +17,7 @@ class Calendar extends React.Component {
 
         this.state={
             popup:false,
-            escalas:[],
+            escalas:[{id: '61dc4f1bfb9c401f5b055e78', title: 'Teste Teste', start: '2022-02-02T17:30:00.000Z', end: '2022-03-03T15:30:00.000Z'}],
             info:null,
             users:[],
             selected: null,
@@ -38,27 +38,29 @@ class Calendar extends React.Component {
              let escala = {
                  id:result._id,
                  title: nomeCompleto,
-                 start: result.inicio,
-                 end:result.fim
+                 start: result.inicio.toString(),
+                 end:result.fim.toString()
              }
              escalas.push(escala)
+
+             await this.setState({escala})
+
+             await getUsers.map( async (result) => {
+
+                 let user = {
+                     value:result._id,
+                     label:result.nome + " " + result.sobrenome
+                 }
+                 users.push(user)
+
+                 await this.setState({users})
+             })
          })
 
-         await getUsers.map( (result) => {
-
-             let user = {
-                 value:result._id,
-                 label:result.nome + " " + result.sobrenome
-             }
-             users.push(user)
-         })
-
-          this.setState({
-             escalas,
-             users,
+         this.setState({
              loading:false
          })
-        console.log(this.state.escalas)
+
      }
 
     select = (info) => {
@@ -97,7 +99,9 @@ class Calendar extends React.Component {
                             selectable={true}
                             selectMirror={true}
                             dayMaxEvents={true}
-                            events={this.state.escalas || []}
+                            events={this.state.escalas}
+                            loading={this.state.loading}
+                            eventSources={this.state.escalas}
                         />
                         <Popup open={this.state.popup===true} onClose={this.close} modal >
                             <h1 className={'Titulo'}>Nova Escala</h1>
