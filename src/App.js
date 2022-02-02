@@ -1,13 +1,10 @@
-import './App.css';
 import NavBar from './components/NavBar/NavBar.js'
 import React, { useReducer, useState } from 'react';
 import SideBar from './components/SideBar/SideBar';
-import Content from './components/Content';
+import Calendar from './components/Calendar/Calendar';
 import Login from '../src/components/login/login'
-
-
-
 import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
+
 
 
 class App extends React.Component {
@@ -31,7 +28,7 @@ class App extends React.Component {
         <Router>
           <Routes>
             <Route exact path={'/users/login'} element={<Login path="/users/login"></Login>}/>
-            <Route exact path={'/calendar'} element={<Content></Content>}/>
+            <Route exact path={'/calendar'} element={<Calendar></Calendar>}/>
           </Routes>
           {/* <NavBar></NavBar>
           <Content></Content>
