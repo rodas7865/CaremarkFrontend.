@@ -1,7 +1,8 @@
 
-import '../login/login.css'
+import './login.css'
 import React, { useState } from 'react';
 import api from '../../Api';
+import {withRouter} from "../hooks";
 
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -11,6 +12,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            error:"",
             form_login: {
                 email: "",
                 password: ""
@@ -30,11 +32,23 @@ class App extends React.Component {
         e.preventDefault();
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
+<<<<<<< HEAD
         await api.loginUser(data)
         localStorage.getItem('authorization')
         console.log(localStorage.getItem('authorization'))
 
 
+=======
+
+        try{
+            await api.loginUser(data)
+            localStorage.getItem('authorization')
+            console.log(localStorage.getItem('authorization'))
+            this.props.navigate('/calendar')
+        }catch (err){
+            this.setState({error:"Password ou Email errado"})
+        }
+>>>>>>> 5b6f247f76028dca98c9e8327bb397f426035943
     }
    
 
@@ -52,6 +66,7 @@ class App extends React.Component {
                                 <i class=""></i>
                                 <input type="password" name='password' value={this.state.form_login.password} class="login__input" placeholder="Palavra-Passe" onChange={(e) => this.updateField(e)}></input>
                             </div>
+                            <p className={'ErrorMensage'}>{(this.state.error==="")?(""):(this.state.error)}</p>
                             <button onClick={this.submit} class="button login__submit">
                                 <span class="button__text">Login</span>
                                 <i class=""></i>
@@ -72,4 +87,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default withRouter(App);
