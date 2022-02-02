@@ -32,14 +32,10 @@ class App extends React.Component {
         e.preventDefault();
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
-<<<<<<< HEAD
+
         await api.loginUser(data)
         localStorage.getItem('authorization')
         console.log(localStorage.getItem('authorization'))
-
-
-=======
-
         try{
             await api.loginUser(data)
             localStorage.getItem('authorization')
@@ -48,7 +44,7 @@ class App extends React.Component {
         }catch (err){
             this.setState({error:"Password ou Email errado"})
         }
->>>>>>> 5b6f247f76028dca98c9e8327bb397f426035943
+
     }
    
 
