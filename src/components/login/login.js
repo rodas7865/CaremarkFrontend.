@@ -33,6 +33,9 @@ class App extends React.Component {
         const data={email:this.state.form_login.email,password:this.state.form_login.password
         }
 
+        await api.loginUser(data)
+        localStorage.getItem('authorization')
+        console.log(localStorage.getItem('authorization'))
         try{
             await api.loginUser(data)
             localStorage.getItem('authorization')
@@ -41,6 +44,7 @@ class App extends React.Component {
         }catch (err){
             this.setState({error:"Password ou Email errado"})
         }
+
     }
    
 

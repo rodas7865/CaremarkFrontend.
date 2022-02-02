@@ -1,10 +1,8 @@
-import NavBar from './components/NavBar/NavBar.js'
+
 import React, { useReducer, useState } from 'react';
-import SideBar from './components/SideBar/SideBar';
 import Calendar from './components/Calendar/Calendar';
 import Login from '../src/components/login/login'
 import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
-
 
 
 class App extends React.Component {
@@ -13,9 +11,6 @@ class App extends React.Component {
     this.state = {
 
     };
-
-
-
 
   }
 
@@ -31,7 +26,7 @@ class App extends React.Component {
           </Routes>
           {/* <NavBar></NavBar>
           <Content></Content>
-          <SideBar></SideBar> */}
+           */}
         </Router>
       </div>
     );
