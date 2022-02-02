@@ -2,6 +2,7 @@
 import './login.css'
 import React, { useState } from 'react';
 import api from '../../Api';
+import {withRouter} from "../hooks";
 
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -77,4 +78,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default withRouter(App);
