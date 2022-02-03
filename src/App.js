@@ -3,7 +3,7 @@ import React, { useReducer, useState } from 'react';
 import Calendar from './components/Calendar/Calendar';
 import Login from '../src/components/login/login'
 import { BrowserRouter as Router,Routes,Route, NavLink } from "react-router-dom";
-import NavBar from './navbar/navbar';
+import NavBar from './components/navbar/navbar';
 
 
 class App extends React.Component {
@@ -24,7 +24,7 @@ class App extends React.Component {
           <NavBar isLoggedIn={this.state.isLoggedIn}/>
           <Routes>
             <Route path={"*"} element={<Login isLoggedIn={this.state.isLoggedIn} path="/users/login"></Login>}/>
-            <Route exact path={'/calendar'} element={<Calendar></Calendar>}/> 
+            <Route exact path={'/calendar'} element={<Calendar></Calendar>}/>
           </Routes>
           {/* <NavBar></NavBar>
           <Content></Content>

@@ -5,3 +5,28 @@
     margin-top: 30px ;
     margin-left: 200px ;
 }
+
+.Separator{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-color: #746fb3;
+}
+
+.Title{
+    color: #746fb3;
+}
+
+.Select{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.Table{
+    margin-left: auto;
+    margin-right: auto;
+}
+.Cell{
+    width: 300px;
+    height: 70px;
+}
+

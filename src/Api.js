@@ -105,11 +105,11 @@ export default {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'authorization': 'BEARER ' + localStorage.getItem('token')
+                'Authorization': 'BEARER ' + localStorage.getItem('token')
             },
             body:JSON.stringify(body)
         })
-        let data = response.headers.get('authorization')
+        let data = response.headers.get('Authorization')
 
         console.log(data)
         localStorage.setItem('token',data)
@@ -161,13 +161,14 @@ export default {
             let response = await fetch(BASE_URL+'escala/',{
                 method:'POST',
                 headers: {
+                    "Access-Control-Allow-Origin": "*",
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'authorization': 'BEARER '+ localStorage.getItem('token')
                 },
                 body:JSON.stringify(body)
             })
-            let data = (response.status===403)?(await response.text()):(await response.json())
+            let data = (response.status===403||500)?(await response.text()):(await response.json())
 
             return data
         },

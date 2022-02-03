@@ -1,5 +1,5 @@
 import React from 'react'
-import FullCalendar from '@fullcalendar/react' // must go before plugins
+import FullCalendar, {preventDefault} from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
 import '../Calendar/calendar.css'
@@ -9,6 +9,7 @@ import {withRouter} from "../hooks";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import Select from 'react-select'
+import {Button, TextField} from "@mui/material";
 
 class Calendar extends React.Component {
 
@@ -17,56 +18,75 @@ class Calendar extends React.Component {
 
         this.state={
             popup:false,
-            escalas:[{id: '61dc4f1bfb9c401f5b055e78', title: 'Teste Teste', start: '2022-02-02T17:30:00.000Z', end: '2022-03-03T15:30:00.000Z'}],
+            escalas:[],
             info:null,
             users:[],
-            selected: null,
-            loading:true
+            selectedStart:null,
+            selectedEnd:null,
+            End:null,
+            Start: null,
+            loading:true,
+            selectedUsers:[]
         }
     }
 
-     async componentDidMount() {
+     componentDidMount() {
 
-         const getUsers = (await api.getUsers()==='Acesso Negado')?(this.props.navigate('/')):(await api.getUsers())
-         const getEscalas = (await api.getEscalas()==='Acesso Negado')?(this.props.navigate('/')):(await api.getEscalas())
-         let escalas=[],
-         users=[]
+        let escalas=[],
+            users=[]
 
-         await getEscalas.map( async (result) => {
-             let nomeCompleto =await api.getUser(result.user_id).then(result=>{return result.nome + " " + result.sobrenome})
+        api.getEscalas().then(result=>{
 
-             let escala = {
-                 id:result._id,
-                 title: nomeCompleto,
-                 start: result.inicio.toString(),
-                 end:result.fim.toString()
-             }
-             escalas.push(escala)
+            api.getUsers().then(result=>{
+                result.forEach(result=>{
+                    let user = {
+                        value:result._id,
+                        label:result.nome + " " + result.sobrenome
+                    }
+                    users.push(user)
 
-             await this.setState({escala})
+                    this.setState({users})
+                })
+                this.setState({
+                    users
+                })
+            })
 
-             await getUsers.map( async (result) => {
+            if(result==='Acesso Negado'){
+                this.props.navigate('/')
+            }else{
+                result.map((result)=>{
+                    let id=result._id,
+                        start=result.inicio.toString(),
+                        end=result.fim.toString(),
+                        title=result.users
 
-                 let user = {
-                     value:result._id,
-                     label:result.nome + " " + result.sobrenome
-                 }
-                 users.push(user)
-
-                 await this.setState({users})
-             })
-         })
-
-         this.setState({
-             loading:false
-         })
+                        let escala = {
+                            id,
+                            title,
+                            start,
+                            end
+                        }
+                        escalas.push(escala)
+                        this.setState({
+                            escalas
+                        })
+                    })
+            }
+            this.setState({
+                loading:false
+            })
+        })
 
      }
 
     select = (info) => {
         this.setState({
             popup:true,
-            selected:info.startStr,
+            selectedStart:info.start.toLocaleDateString() + " | " + info.start.toLocaleTimeString()   ,
+            selectedEnd:info.end.toLocaleDateString() + " | " + info.end.toLocaleTimeString(),
+            Start:info.start,
+            End:info.end
         })
     }
 
@@ -74,6 +94,26 @@ class Calendar extends React.Component {
         this.setState({
             popup:false,
         })
+    }
+
+    newEscale=async ()=>{
+        if(this.state.selectedUsers[0]===undefined){
+            alert('Select at least 1 User')
+        }else {
+
+            let users = ""
+            await this.state.selectedUsers.forEach(result => {
+                users += result.label + " "
+            })
+            let Escale = {
+                confirmado: true,
+                users: users,
+                notas: " ",
+                inicio: this.state.Start,
+                fim: this.state.End
+            }
+            await api.postEscala(Escale)
+        }
     }
 
     render() {
@@ -85,7 +125,6 @@ class Calendar extends React.Component {
                     <main className='calendar_content'>
 
                         <FullCalendar
-                             locale= 'pt'
                             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                             select={(info)=>{
                                 this.select(info)
@@ -96,24 +135,45 @@ class Calendar extends React.Component {
                                 center: 'title',
                                 right: 'timeGridWeek'
                             }}
-                            editable={true}
                             selectable={true}
                             selectMirror={true}
                             dayMaxEvents={true}
                             events={this.state.escalas}
                             loading={this.state.loading}
                             eventSources={this.state.escalas}
+                            eventClick={console.log('a')}
                         />
-                        <Popup open={this.state.popup===true} onClose={this.close} modal >
-                            <h1 className={'Titulo'}>Nova Escala</h1>
+                        <Popup open={this.state.popup===true} onClose={this.close} closeOnDocumentClick={false} modal >
+                            <h1 className={'Title'}>New Escale</h1>
                             <hr className={'Separator'}/>
                             <p>{this.state.selected}</p>
-                            <form>
+                            <form onSubmit={(e)=>{e.preventDefault();this.newEscale()}}>
                                 <Select
+                                    placeholder={'Select your users...'}
+                                    className={'Select'}
                                     closeMenuOnSelect={false}
                                     isMulti
                                     options={this.state.users}
+                                    onChange={(info)=>{this.setState({selectedUsers:info})}}
                                 />
+                                <table className={'Table'}>
+                                    <tr>
+                                        <th className={'Cell'}>
+                                            <TextField label={'Start:'} variant={'outlined'} value={this.state.selectedStart} disabled={true} className={'Table'}></TextField>
+                                        </th>
+                                        <th className={'Cell'}>
+                                            <TextField label={'End:'} variant={'outlined'} value={this.state.selectedEnd} disabled={true}></TextField>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th className={'Cell'}>
+                                            <Button type={'Submit'} variant={"outlined"} color={"success"} >Confirm</Button>
+                                        </th>
+                                        <th className={'Cell'}>
+                                            <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
+                                        </th>
+                                    </tr>
+                                </table>
                             </form>
                         </Popup>
                     </main>

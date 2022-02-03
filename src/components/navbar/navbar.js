@@ -8,7 +8,7 @@ import {
   NavMenu,
   NavBtn,
   NavBtnLink,
-} from "../navbar/navbarstyle";
+} from "./navbarstyle";
 
 
 class NavBar extends React.Component {
