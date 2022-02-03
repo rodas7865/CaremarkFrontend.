@@ -85,6 +85,7 @@ class Calendar extends React.Component {
                     <main className='calendar_content'>
 
                         <FullCalendar
+                             locale= 'pt'
                             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                             select={(info)=>{
                                 this.select(info)

@@ -10,7 +10,7 @@
 body {
 	background-image: url(https://cdn.pixabay.com/photo/2020/04/19/20/10/test-tube-5065426_960_720.jpg);
 	background-size: cover;
-            background-repeat: no-repeat;
+    background-repeat: no-repeat;
 }
 
 .ErrorMensage{
