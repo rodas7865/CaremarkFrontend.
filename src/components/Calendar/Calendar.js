@@ -26,7 +26,13 @@ class Calendar extends React.Component {
             End:null,
             Start: null,
             loading:true,
-            selectedUsers:[]
+            selectedUsers:[],
+            edit:null,
+            editPopup:false,
+            editTitle:"",
+            editStart:null,
+            editEnd:null,
+            editID:null
         }
     }
 
@@ -93,7 +99,26 @@ class Calendar extends React.Component {
     close = () => {
         this.setState({
             popup:false,
+            editPopup:false,
         })
+    }
+
+    edit=(info)=>{
+        console.log(info.event.start)
+        this.setState({
+            editPopup:true,
+            edit:info,
+            editTitle:info.event.title,
+            editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
+            editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
+            editID:info.event.id
+        })
+    }
+
+    deleteEscale=async ()=>{
+        console.log(this.state.editID)
+       await  api.deleteEscala(this.state.editID)
+        window.location.reload()
     }
 
     newEscale=async ()=>{
@@ -114,6 +139,7 @@ class Calendar extends React.Component {
             }
             await api.postEscala(Escale)
         }
+        window.location.reload()
     }
 
     render() {
@@ -141,7 +167,7 @@ class Calendar extends React.Component {
                             events={this.state.escalas}
                             loading={this.state.loading}
                             eventSources={this.state.escalas}
-                            eventClick={console.log('a')}
+                            eventClick={(info)=>{this.edit(info)}}
                         />
                         <Popup open={this.state.popup===true} onClose={this.close} closeOnDocumentClick={false} modal >
                             <h1 className={'Title'}>New Escale</h1>
@@ -174,6 +200,31 @@ class Calendar extends React.Component {
                                         </th>
                                     </tr>
                                 </table>
+                            </form>
+                        </Popup>
+                        <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
+                            <h1 className={'Title'}>Edit Escale</h1>
+                            <h3>{this.state.editTitle}</h3>
+                            <hr className={'Separator'}/>
+                            <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
+                            <table className={'Table'}>
+                                <tr>
+                                    <th className={'Cell'}>
+                                        <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
+                                    </th>
+                                    <th className={'Cell'}>
+                                        <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th className={'Cell'}>
+                                        <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
+                                    </th>
+                                    <th className={'Cell'}>
+                                        <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
+                                    </th>
+                                </tr>
+                            </table>
                             </form>
                         </Popup>
                     </main>
