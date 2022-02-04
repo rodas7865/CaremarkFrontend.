@@ -174,14 +174,6 @@ class Calendar extends React.Component {
                             <hr className={'Separator'}/>
                             <p>{this.state.selected}</p>
                             <form onSubmit={(e)=>{e.preventDefault();this.newEscale()}}>
-                                <Select
-                                    placeholder={'Select your users...'}
-                                    className={'Select'}
-                                    closeMenuOnSelect={false}
-                                    isMulti
-                                    options={this.state.users}
-                                    onChange={(info)=>{this.setState({selectedUsers:info})}}
-                                />
                                 <table className={'Table'}>
                                     <tr>
                                         <th className={'Cell'}>
@@ -191,6 +183,16 @@ class Calendar extends React.Component {
                                             <TextField label={'End:'} variant={'outlined'} value={this.state.selectedEnd} disabled={true}></TextField>
                                         </th>
                                     </tr>
+                                </table>
+                                <Select
+                                    placeholder={'Select your users...'}
+                                    className={'Select'}
+                                    closeMenuOnSelect={false}
+                                    isMulti
+                                    options={this.state.users}
+                                    onChange={(info)=>{this.setState({selectedUsers:info})}}
+                                />
+                                <table className={'Table'}>
                                     <tr>
                                         <th className={'Cell'}>
                                             <Button type={'Submit'} variant={"outlined"} color={"success"} >Confirm</Button>

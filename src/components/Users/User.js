@@ -14,6 +14,7 @@ class Employeelist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadingScale:true,
       newUser:{
         nome:'',
         sobrenome:'',
@@ -96,7 +97,8 @@ class Employeelist extends React.Component {
   close=()=>{
     this.setState({
       popup:false,
-      popupNew:false
+      popupNew:false,
+      loadingScale:true
     })
   }
 
@@ -128,6 +130,7 @@ class Employeelist extends React.Component {
       })
       this.setState({
         userRows,
+        loadingScale:false,
       })
     })
   }
@@ -181,10 +184,17 @@ class Employeelist extends React.Component {
       return (<> loading </>)
     } else {
       return (
-          <div style={{height: 400, width: '100%'}}>
+          <div style={{height: 400, width: '100%',}}>
             <h2>Employees List</h2>
-            <Button variant={"outlined"} color={"success"} onClick={()=>this.newPopup()}>New Employee</Button>
+            <Button id={'button'} variant={"outlined"} color={"success"} onClick={()=>this.newPopup()}>New Employee</Button>
+            <hr id={'Separator'}/>
             <DataGrid
+                sx={{
+                  color: '#7875B5',
+                  backgroundColor:'#D1D1D4',
+                  outlineColor:'#7875B5',
+                  borderColor:'#7875B5',
+                }}
                 rows={this.state.rows}
                 columns={this.state.columns}
                 pageSize={5}
@@ -194,12 +204,14 @@ class Employeelist extends React.Component {
             <Popup open={this.state.popup===true} onClose={this.close} onOpen={this.open} closeOnDocumentClick={false} modal>
               <h1 className={'Title'}>{this.state.selectedTitle}</h1>
               <div style={{height: 400, width: '100%'}}>
-                <DataGrid
+                {(this.state.loadingScale)?(<p>Loading</p>):(
+                    <DataGrid
                     rows={this.state.userRows}
                     columns={this.state.userColumns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
-                    onRowClick={(info)=>this.selected(info.row)}/>
+                    onRowClick={(info)=>this.selected(info.row)}/>)}
+
               </div>
               <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Close</Button>
             </Popup>
