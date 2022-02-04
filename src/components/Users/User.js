@@ -14,6 +14,7 @@ class Employeelist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedField:null,
       loadingScale:true,
       newUser:{
         nome:'',
@@ -91,6 +92,7 @@ class Employeelist extends React.Component {
     this.setState({
       popup:true,
       selectedTitle:info.firstName + ' ' + info.lastName + ' ',
+      selectedField:info.field,
     })
   }
 
@@ -185,7 +187,7 @@ class Employeelist extends React.Component {
     } else {
       return (
           <div style={{height: 400, width: '100%',}}>
-            <h2>Employees List</h2>
+            <p id={'T'}><h2>Employees List</h2></p>
             <Button id={'button'} variant={"outlined"} color={"success"} onClick={()=>this.newPopup()}>New Employee</Button>
             <hr id={'Separator'}/>
             <DataGrid
@@ -203,6 +205,7 @@ class Employeelist extends React.Component {
             />
             <Popup open={this.state.popup===true} onClose={this.close} onOpen={this.open} closeOnDocumentClick={false} modal>
               <h1 className={'Title'}>{this.state.selectedTitle}</h1>
+              <h4>{this.state.selectedField}</h4>
               <div style={{height: 400, width: '100%'}}>
                 {(this.state.loadingScale)?(<p>Loading</p>):(
                     <DataGrid

@@ -87,13 +87,18 @@ class Calendar extends React.Component {
      }
 
     select = (info) => {
-        this.setState({
-            popup:true,
-            selectedStart:info.start.toLocaleDateString() + " | " + info.start.toLocaleTimeString()   ,
-            selectedEnd:info.end.toLocaleDateString() + " | " + info.end.toLocaleTimeString(),
-            Start:info.start,
-            End:info.end
-        })
+        if(Math.abs(info.start.getTime()-info.end.getTime())<=86400000){
+            this.setState({
+                popup:true,
+                selectedStart:info.start.toLocaleDateString() + " | " + info.start.toLocaleTimeString()   ,
+                selectedEnd:info.end.toLocaleDateString() + " | " + info.end.toLocaleTimeString(),
+                Start:info.start,
+                End:info.end
+            })
+        } else {
+            alert('Only 0 to 12 hours scales are acceptable.')
+        }
+
     }
 
     close = () => {
@@ -122,24 +127,56 @@ class Calendar extends React.Component {
     }
 
     newEscale=async ()=>{
-        if(this.state.selectedUsers[0]===undefined){
-            alert('Select at least 1 User')
-        }else {
+        let Break = {}
+        let stopFunc = false
+        try {
+            this.state.escalas.forEach(result => {
+                let start = new Date(result.start)
+                let end = new Date(result.end)
+                if (start.getDate() === this.state.Start.getDate() || end.getDate() === this.state.End.getDate() || start.getDate() === this.state.End.getDate() || end.getDate() === this.state.Start.getDate()) {
+                    let users = result.title
+                    this.state.selectedUsers.forEach(async (result) => {
+                        if (users.includes(result.label + " ")) {
+                            alert('User already has a scale this day.')
+                            stopFunc = true
+                            throw Break
+                        }
+                    })
 
-            let users = ""
-            await this.state.selectedUsers.forEach(result => {
-                users += result.label + " "
+                } else {
+
+                    if (this.state.selectedUsers[0] === undefined) {
+                        alert('Select at least 1 User')
+
+                    } else {
+
+                        let users = []
+                        this.state.selectedUsers.forEach(result => {
+                            users.push(result.label + " ")
+                        })
+                        let Escale = {
+                            confirmado: true,
+                            users: users,
+                            notas: " ",
+                            inicio: this.state.Start,
+                            fim: this.state.End
+                        }
+
+                        if(stopFunc===false){
+                        api.postEscala(Escale).then((result)=>{
+                            window.location.reload()}
+                        )}
+                    }
+
+                }
+
             })
-            let Escale = {
-                confirmado: true,
-                users: users,
-                notas: " ",
-                inicio: this.state.Start,
-                fim: this.state.End
-            }
-            await api.postEscala(Escale)
         }
-        window.location.reload()
+        catch (e){
+            if (e !== Break) throw e
+            stopFunc=true
+        }
+
     }
 
     render() {
@@ -167,6 +204,8 @@ class Calendar extends React.Component {
                             events={this.state.escalas}
                             loading={this.state.loading}
                             eventSources={this.state.escalas}
+                            eventBackgroundColor={'#7875B5'}
+                            eventBorderColor={'#4C489D'}
                             eventClick={(info)=>{this.edit(info)}}
                         />
                         <Popup open={this.state.popup===true} onClose={this.close} closeOnDocumentClick={false} modal >

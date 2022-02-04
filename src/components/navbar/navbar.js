@@ -57,13 +57,13 @@ class NavBar extends React.Component {
               to="/calendar"
               activeStyle={{ color: 'black' }}
             >
-              Inicio
+              Home
             </NavLink>
             <NavLink
               to="/users"
               activeStyle={{ color: 'black' }}
             >
-              Utilizadores
+              Users
             </NavLink>
             <NavLink
               to="/contact"

@@ -3,7 +3,8 @@
     height: 80%;
     align-items:center;
     margin-top: 30px ;
-    margin-left: 200px ;
+    margin-left: auto ;
+    margin-right: auto ;
 }
 
 .Separator{
