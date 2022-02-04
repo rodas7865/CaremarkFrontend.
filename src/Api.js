@@ -116,6 +116,7 @@ export default {
         return data
     },
     registerUser: async function(body){
+        console.log(JSON.stringify(body))
         let response = await fetch(BASE_URL+'users/register',{
             method:'POST',
             headers: {
