@@ -1,5 +1,4 @@
 import React, { useReducer, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   Nav,
   NavLogo,
@@ -9,41 +8,12 @@ import {
   NavBtn,
   NavBtnLink,
 } from "./navbarstyle";
+import {withRouter} from "../hooks";
 
 
 class NavBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoggedIn: this.props.isLoggedIn
-    };
-
-    
-  }
-
-
-
 
   render() {
-    let islogged;
-    if (this.state.isLoggedIn) {
-      islogged = <NavLink
-        to="/users/login"
-        activeStyle={{ color: 'black' }}
-      >
-        Login
-      </NavLink>
-    } else {
-      islogged = <NavLink
-        to="/users/login"
-        activeStyle={{ color: 'black' }}
-      >
-        Logout
-      </NavLink>
-    }
-
-
-
     return (
       <>
         <Nav>
@@ -54,7 +24,7 @@ class NavBar extends React.Component {
 
           <NavMenu>
             <NavLink
-              to="/calendar"
+              to="/dashboard"
               activeStyle={{ color: 'black' }}
             >
               Home
@@ -66,15 +36,11 @@ class NavBar extends React.Component {
               Users
             </NavLink>
             <NavLink
-              to="/contact"
-              activeStyle={{ color: 'black' }}
+              to="/calendar"
+              activeStyle={{ color: 'black'}}
             >
-              Contact
+              Calendar
             </NavLink>
-            {islogged}
-            <NavBtn>
-              <NavBtnLink to="/sign-up">Sign Up</NavBtnLink>
-            </NavBtn>
           </NavMenu>
         </Nav>
       </>
@@ -83,4 +49,4 @@ class NavBar extends React.Component {
 
 }
 
-export default NavBar;
+export default withRouter(NavBar);

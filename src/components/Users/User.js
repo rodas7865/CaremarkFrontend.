@@ -60,6 +60,7 @@ class Employeelist extends React.Component {
     let rows = []
     api.getUsers().then(result=>{
       if(result==='Acesso Negado'){
+        localStorage.setItem('token',null)
         this.props.navigate('/')
       }else {
         result.forEach(result => {
@@ -193,7 +194,7 @@ class Employeelist extends React.Component {
             <DataGrid
                 sx={{
                   color: '#7875B5',
-                  backgroundColor:'#D1D1D4',
+                  backgroundColor:'rgba(255,255,255,0.8)',
                   outlineColor:'#7875B5',
                   borderColor:'#7875B5',
                 }}

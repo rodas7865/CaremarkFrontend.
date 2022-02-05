@@ -59,6 +59,7 @@ class Calendar extends React.Component {
             })
 
             if(result==='Acesso Negado'){
+                localStorage.setItem('token',null)
                 this.props.navigate('/')
             }else{
                 result.map((result)=>{
@@ -137,7 +138,9 @@ class Calendar extends React.Component {
                     let users = result.title
                     this.state.selectedUsers.forEach(async (result) => {
                         if (users.includes(result.label + " ")) {
-                            alert('User already has a scale this day.')
+                            if(stopFunc===false) {
+                                alert('User already has a scale this day.')
+                            }
                             stopFunc = true
                             throw Break
                         }
@@ -186,6 +189,7 @@ class Calendar extends React.Component {
                 return (
 
                     <main className='calendar_content'>
+
 
                         <FullCalendar
                             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
