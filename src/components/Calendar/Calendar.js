@@ -17,6 +17,7 @@ class Calendar extends React.Component {
         super(props);
 
         this.state={
+            isAdmin:false,
             popup:false,
             escalas:[],
             info:null,
@@ -62,6 +63,14 @@ class Calendar extends React.Component {
                 localStorage.setItem('token',null)
                 this.props.navigate('/')
             }else{
+                let decode=JSON.parse(atob(localStorage.getItem('token').split('.')[1])),
+                    userId=decode.userid
+                api.getUser(userId).then(result=>{
+                    this.setState({
+                        isAdmin:result.admin
+                    })
+                })
+
                 result.map((result)=>{
                     let id=result._id,
                         start=result.inicio.toString(),
@@ -202,7 +211,7 @@ class Calendar extends React.Component {
                                 center: 'title',
                                 right: 'timeGridWeek'
                             }}
-                            selectable={true}
+                            selectable={this.state.isAdmin}
                             selectMirror={true}
                             dayMaxEvents={true}
                             events={this.state.escalas}

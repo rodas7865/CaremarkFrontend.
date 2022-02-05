@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   Nav,
   NavLogo,
@@ -12,6 +13,28 @@ import {withRouter} from "../hooks";
 
 
 class NavBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoggedIn: this.checkLog
+    };
+
+
+  }
+
+  checkLog=()=>{
+    if(localStorage.getItem('token') === ''){
+      return false
+    } else {
+      return true
+    }
+  }
+
+  loggin=()=> {
+    if (this.state.isLoggedIn() === true) {
+    }
+  }
+
 
   render() {
     return (
@@ -37,10 +60,13 @@ class NavBar extends React.Component {
             </NavLink>
             <NavLink
               to="/calendar"
-              activeStyle={{ color: 'black'}}
+              activeStyle={{ color: 'black' }}
             >
               Calendar
             </NavLink>
+            <NavBtn>
+              <NavBtnLink to={'/user/login'} onClick={this.loggin()} >{(this.state.isLoggedIn() === true)?('Log Out'):('Log In')}</NavBtnLink>
+            </NavBtn>
           </NavMenu>
         </Nav>
       </>

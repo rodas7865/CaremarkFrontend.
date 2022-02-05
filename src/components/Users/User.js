@@ -156,8 +156,6 @@ class Employeelist extends React.Component {
         newUser
       })
     }
-
-    console.log(newUser)
   }
 
   newUser=()=>{
@@ -177,7 +175,7 @@ class Employeelist extends React.Component {
             alert('Invalid Password')
           } else {
           api.registerUser(this.state.newUser).then(result=>{
-            console.log(result)
+            window.location.reload()
           })
     }}}}}
   }
