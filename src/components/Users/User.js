@@ -14,6 +14,7 @@ class Employeelist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isAdmin:false,
       selectedField:null,
       loadingScale:true,
       newUser:{
@@ -58,29 +59,49 @@ class Employeelist extends React.Component {
 
   componentDidMount() {
     let rows = []
-    api.getUsers().then(result=>{
+    api.getUsers().then(async(result)=>{
       if(result==='Acesso Negado'){
         localStorage.setItem('token',null)
         this.props.navigate('/')
+
       }else {
-        result.forEach(result => {
-          console.log(result)
-          let id = result._id,
-              firstName = result.nome,
-              lastName = result.sobrenome,
-              field = result.area,
-              email = result.email
 
-          let row = {
-            id,
-            firstName,
-            lastName,
-            field,
-            email,
-          }
+        let resultantRow= result
 
-          rows.push(row)
+        let decode=JSON.parse(atob(localStorage.getItem('token').split('.')[1])),
+            userId=decode.userid
+        await api.getUser(userId).then((result)=>{
+         this.setState({
+            isAdmin:result.admin
+          })
         })
+
+        if(!this.state.isAdmin){
+          console.log(this.state.isAdmin)
+          alert('You are not allowed to view this page!')
+          this.props.navigate('/calendar')
+        }else {
+
+          resultantRow.forEach(result => {
+
+            let id = result._id,
+                firstName = result.nome,
+                lastName = result.sobrenome,
+                field = result.area,
+                email = result.email
+
+            let row = {
+              id,
+              firstName,
+              lastName,
+              field,
+              email,
+            }
+
+            rows.push(row)
+
+          })
+        }
       }
       this.setState({
         rows,
@@ -184,81 +205,93 @@ class Employeelist extends React.Component {
     if (this.state.loading) {
       return (<> loading </>)
     } else {
-      return (
-          <div style={{height: 400, width: '100%',}}>
-            <p id={'T'}><h2>Employees List</h2></p>
-            <Button id={'button'} variant={"outlined"} color={"success"} onClick={()=>this.newPopup()}>New Employee</Button>
-            <hr id={'Separator'}/>
-            <DataGrid
-                sx={{
-                  color: '#7875B5',
-                  backgroundColor:'rgba(255,255,255,0.8)',
-                  outlineColor:'#7875B5',
-                  borderColor:'#7875B5',
-                }}
-                rows={this.state.rows}
-                columns={this.state.columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                onRowClick={(info)=>this.selected(info.row)}
-            />
-            <Popup open={this.state.popup===true} onClose={this.close} onOpen={this.open} closeOnDocumentClick={false} modal>
-              <h1 className={'Title'}>{this.state.selectedTitle}</h1>
-              <h4>{this.state.selectedField}</h4>
-              <div style={{height: 400, width: '100%'}}>
-                {(this.state.loadingScale)?(<p>Loading</p>):(
-                    <DataGrid
-                    rows={this.state.userRows}
-                    columns={this.state.userColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    onRowClick={(info)=>this.selected(info.row)}/>)}
+        return (
+            <div style={{height: 400, width: '100%',}}>
+              <p id={'T'}><h2>Employees List</h2></p>
+              <Button id={'button'} variant={"outlined"} color={"success"} onClick={() => this.newPopup()}>New
+                Employee</Button>
+              <hr id={'Separator'}/>
+              <DataGrid
+                  sx={{
+                    color: '#7875B5',
+                    backgroundColor: 'rgba(255,255,255,0.8)',
+                    outlineColor: '#7875B5',
+                    borderColor: '#7875B5',
+                  }}
+                  rows={this.state.rows}
+                  columns={this.state.columns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  onRowClick={(info) => this.selected(info.row)}
+              />
+              <Popup open={this.state.popup === true} onClose={this.close} onOpen={this.open}
+                     closeOnDocumentClick={false} modal>
+                <h1 className={'Title'}>{this.state.selectedTitle}</h1>
+                <h4>{this.state.selectedField}</h4>
+                <div style={{height: 400, width: '100%'}}>
+                  {(this.state.loadingScale) ? (<p>Loading</p>) : (
+                      <DataGrid
+                          rows={this.state.userRows}
+                          columns={this.state.userColumns}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          onRowClick={(info) => this.selected(info.row)}/>)}
 
-              </div>
-              <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Close</Button>
-            </Popup>
-            <Popup open={this.state.popupNew===true} onClose={this.close} closeOnDocumentClick={false} modal>
-              <h1 className={'Title'}>New Employee</h1>
-              <form onSubmit={(e)=>{e.preventDefault();this.newUser(e)}}>
-                <table className={'Table'}>
-                  <tr>
-                    <th className={'Cell'}>
-                      <TextField label={'First Name:'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'nome'}></TextField>
-                    </th>
-                    <th className={'Cell'}>
-                      <TextField label={'Last Name:'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'sobrenome'}></TextField>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className={'Cell'}>
-                      <TextField label={'Field:'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'area'}></TextField>
-                    </th>
-                    <th className={'Cell'}>
-                      <TextField label={'Email:'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'email'}></TextField>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className={'Cell'}>
-                      <TextField label={'Password:'} type={'password'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'password'}></TextField>
-                    </th>
-                    <th className={'Cell'}>
-                      Admin:
-                      <Switch label={'Admin:'} variant={'outlined'} onChange={(e) => this.updateField(e)} name={'admin'}></Switch>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className={'Cell'}>
-                      <Button type={'Submit'} variant={"outlined"} color={"error"}>Create</Button>
-                    </th>
-                    <th className={'Cell'}>
-                      <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
-                    </th>
-                  </tr>
-                </table>
-              </form>
-            </Popup>
-          </div>)
-    }
+                </div>
+                <Button variant={"outlined"} color={"error"} onClick={() => this.close()}>Close</Button>
+              </Popup>
+              <Popup open={this.state.popupNew === true} onClose={this.close} closeOnDocumentClick={false} modal>
+                <h1 className={'Title'}>New Employee</h1>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  this.newUser(e)
+                }}>
+                  <table className={'Table'}>
+                    <tr>
+                      <th className={'Cell'}>
+                        <TextField label={'First Name:'} variant={'outlined'} onChange={(e) => this.updateField(e)}
+                                   name={'nome'}></TextField>
+                      </th>
+                      <th className={'Cell'}>
+                        <TextField label={'Last Name:'} variant={'outlined'} onChange={(e) => this.updateField(e)}
+                                   name={'sobrenome'}></TextField>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className={'Cell'}>
+                        <TextField label={'Field:'} variant={'outlined'} onChange={(e) => this.updateField(e)}
+                                   name={'area'}></TextField>
+                      </th>
+                      <th className={'Cell'}>
+                        <TextField label={'Email:'} variant={'outlined'} onChange={(e) => this.updateField(e)}
+                                   name={'email'}></TextField>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className={'Cell'}>
+                        <TextField label={'Password:'} type={'password'} variant={'outlined'}
+                                   onChange={(e) => this.updateField(e)} name={'password'}></TextField>
+                      </th>
+                      <th className={'Cell'}>
+                        Admin:
+                        <Switch label={'Admin:'} variant={'outlined'} onChange={(e) => this.updateField(e)}
+                                name={'admin'}></Switch>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className={'Cell'}>
+                        <Button type={'Submit'} variant={"outlined"} color={"error"}>Create</Button>
+                      </th>
+                      <th className={'Cell'}>
+                        <Button variant={"outlined"} color={"error"} onClick={() => this.close()}>Cancel</Button>
+                      </th>
+                    </tr>
+                  </table>
+                </form>
+              </Popup>
+            </div>)
+      }
+
   }
 
 

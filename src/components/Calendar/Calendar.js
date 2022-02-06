@@ -10,6 +10,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import Select from 'react-select'
 import {Button, TextField} from "@mui/material";
+import Switch from "@mui/material/Switch";
 
 class Calendar extends React.Component {
 
@@ -33,7 +34,8 @@ class Calendar extends React.Component {
             editTitle:"",
             editStart:null,
             editEnd:null,
-            editID:null
+            editID:null,
+            isConfirmed:false,
         }
     }
 
@@ -44,21 +46,6 @@ class Calendar extends React.Component {
 
         api.getEscalas().then(result=>{
 
-            api.getUsers().then(result=>{
-                result.forEach(result=>{
-                    let user = {
-                        value:result._id,
-                        label:result.nome + " " + result.sobrenome
-                    }
-                    users.push(user)
-
-                    this.setState({users})
-                })
-                this.setState({
-                    users
-                })
-            })
-
             if(result==='Acesso Negado'){
                 localStorage.setItem('token',null)
                 this.props.navigate('/')
@@ -68,6 +55,21 @@ class Calendar extends React.Component {
                 api.getUser(userId).then(result=>{
                     this.setState({
                         isAdmin:result.admin
+                    })
+                })
+
+                api.getUsers().then(result=>{
+                    result.forEach(result=>{
+                        let user = {
+                            value:result._id,
+                            label:result.nome + " " + result.sobrenome
+                        }
+                        users.push(user)
+
+                        this.setState({users})
+                    })
+                    this.setState({
+                        users
                     })
                 })
 
@@ -119,14 +121,18 @@ class Calendar extends React.Component {
     }
 
     edit=(info)=>{
-        console.log(info.event.start)
-        this.setState({
-            editPopup:true,
-            edit:info,
-            editTitle:info.event.title,
-            editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
-            editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
-            editID:info.event.id
+        api.getEscala(info.event.id).then(result=>{
+            this.setState({
+                isConfirmed:result[0].confirmado
+            })
+            this.setState({
+                editPopup:true,
+                edit:info,
+                editTitle:info.event.title,
+                editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
+                editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
+                editID:info.event.id
+            })
         })
     }
 
@@ -189,6 +195,12 @@ class Calendar extends React.Component {
             stopFunc=true
         }
 
+    }
+
+    setConfirmed=()=>{
+        this.setState({
+            isConfirmed:!this.state.isConfirmed
+        })
     }
 
     render() {
@@ -256,31 +268,68 @@ class Calendar extends React.Component {
                                 </table>
                             </form>
                         </Popup>
-                        <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
-                            <h1 className={'Title'}>Edit Escale</h1>
-                            <h3>{this.state.editTitle}</h3>
-                            <hr className={'Separator'}/>
-                            <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
-                            <table className={'Table'}>
-                                <tr>
-                                    <th className={'Cell'}>
-                                        <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
-                                    </th>
-                                    <th className={'Cell'}>
-                                        <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className={'Cell'}>
-                                        <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
-                                    </th>
-                                    <th className={'Cell'}>
-                                        <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
-                                    </th>
-                                </tr>
-                            </table>
-                            </form>
-                        </Popup>
+                        {(this.state.isAdmin)?(
+                            <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
+                                <h1 className={'Title'}>Edit Escale</h1>
+                                <h3>{this.state.editTitle}</h3>
+                                <hr className={'Separator'}/>
+                                <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
+                                    <table className={'Table'}>
+                                        <tr>
+                                            <th className={'Cell'}>
+                                                <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
+                                            </th>
+                                            <th className={'Cell'}>
+                                                <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th className={'Cell'}>
+                                                <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
+                                            </th>
+                                            <th className={'Cell'}>
+                                                <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </Popup>
+                        ):(
+                            <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
+                                <h1 className={'Title'}>Edit Escale</h1>
+                                <h3>{this.state.editTitle}</h3>
+                                <hr className={'Separator'}/>
+                                <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
+                                    <table className={'Table'}>
+                                        <tr>
+                                            <th className={'Cell'}>
+                                                <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
+                                            </th>
+                                            <th className={'Cell'}>
+                                                <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Confirmed:
+                                                <Switch label={'Admin:'} variant={'outlined'} defaultChecked={this.state.isConfirmed} onClick={() => this.setConfirmed}
+                                                        name={'admin'}></Switch>
+                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} onChange={(e) => this.setReason(e)}></TextField>
+
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th className={'Cell'}>
+                                                <Button variant={"outlined"} color={"success"} onClick={()=>this.close()} >Save</Button>
+                                            </th>
+                                            <th className={'Cell'}>
+                                                <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Close</Button>
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </Popup>
+                        )}
                     </main>
                 )
             }

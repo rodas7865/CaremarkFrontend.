@@ -13,6 +13,7 @@ export default {
             },
             body:JSON.stringify(body)
         })
+
         let data = (response.status===403)?(await response.text()):(await response.json())
 
         return data
@@ -189,6 +190,20 @@ export default {
         },
         patchEscala: async function(body,id){
             let response = await fetch(BASE_URL+'escala/' + id,{
+                method:'PATCH',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'authorization': 'BEARER '+ localStorage.getItem('token')
+                },
+                body:JSON.stringify(body)
+            })
+            let data = (response.status===403)?(await response.text()):(await response.json())
+
+            return data
+        },
+        patchEscalaConfirm: async function(body,id){
+            let response = await fetch(BASE_URL+'escala/' + id +'/confirm',{
                 method:'PATCH',
                 headers: {
                     'Accept': 'application/json',

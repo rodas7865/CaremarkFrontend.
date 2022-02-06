@@ -34,11 +34,9 @@ class App extends React.Component {
         }
         await api.loginUser(data)
         localStorage.getItem('token')
-        console.log(localStorage.getItem('token'))
         try{
             await api.loginUser(data)
             localStorage.getItem('token')
-            console.log(localStorage.getItem('token'))
             this.props.navigate('/calendar')
             this.props.isLoggedIn=false
         }catch (err){
