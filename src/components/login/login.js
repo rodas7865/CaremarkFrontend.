@@ -36,12 +36,8 @@ class App extends React.Component {
         }
         await api.loginUser(data)
         localStorage.getItem('token')
-<<<<<<< Updated upstream
-        try{
-=======
         console.log(localStorage.getItem('token'))
         try {
->>>>>>> Stashed changes
             await api.loginUser(data)
             localStorage.getItem('token')
             this.props.navigate('/calendar')
@@ -49,8 +45,6 @@ class App extends React.Component {
         } catch (err) {
             this.setState({ error: "Password ou Email errado" })
         }
-    
-       
     }
 
 

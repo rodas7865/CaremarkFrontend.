@@ -272,7 +272,7 @@ class Calendar extends React.Component {
                                 </table>
                             </form>
                         </Popup>
-<<<<<<< Updated upstream
+
                         {(this.state.isAdmin)?(
                             <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
                                 <h1 className={'Title'}>Edit Escale</h1>
@@ -363,7 +363,6 @@ class Calendar extends React.Component {
                             
                         </Popup>
                         <button onClick={this.loggout}>Logout</button>
->>>>>>> Stashed changes
                     </main>
                 )
             }
