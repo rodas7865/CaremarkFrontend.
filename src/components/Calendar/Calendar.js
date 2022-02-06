@@ -18,6 +18,8 @@ class Calendar extends React.Component {
         super(props);
 
         this.state={
+            userName:null,
+            selectedReason:null,
             isAdmin:false,
             popup:false,
             escalas:[],
@@ -36,6 +38,7 @@ class Calendar extends React.Component {
             editEnd:null,
             editID:null,
             isConfirmed:false,
+            reason:" ",
         }
     }
 
@@ -55,7 +58,8 @@ class Calendar extends React.Component {
                 api.getUser(userId).then(result=>{
                     console.log("User Id"+ userId)
                     this.setState({
-                        isAdmin:result.admin
+                        isAdmin:result.admin,
+                        userName: result.nome + " " + result.sobrenome + " "
                     })
                 })
 
@@ -78,13 +82,15 @@ class Calendar extends React.Component {
                     let id=result._id,
                         start=result.inicio.toString(),
                         end=result.fim.toString(),
-                        title=result.users
+                        title=result.users,
+                        backgroundColor=(result.confirmado)?('#7875B5'):('#7c7c7c')
 
                         let escala = {
                             id,
                             title,
                             start,
-                            end
+                            end,
+                            backgroundColor,
                         }
                         escalas.push(escala)
                         this.setState({
@@ -122,19 +128,41 @@ class Calendar extends React.Component {
     }
 
     edit=(info)=>{
-        api.getEscala(info.event.id).then(result=>{
-            this.setState({
-                isConfirmed:result[0].confirmado
+        if(!this.state.isAdmin){
+            if(!info.event.title.includes(this.state.userName)){
+                alert('You can only select the dates with your name.')
+            } else {
+                api.getEscala(info.event.id).then(result=>{
+                    this.setState({
+                        isConfirmed:result[0].confirmado,
+                        selectedReason:result[0].notas,
+                    })
+                    this.setState({
+                        editPopup:true,
+                        edit:info,
+                        editTitle:info.event.title,
+                        editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
+                        editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
+                        editID:info.event.id
+                    })
+                })
+            }
+        }else{
+            api.getEscala(info.event.id).then(result=>{
+                this.setState({
+                    isConfirmed:result[0].confirmado,
+                    selectedReason:result[0].notas,
+                })
+                this.setState({
+                    editPopup:true,
+                    edit:info,
+                    editTitle:info.event.title,
+                    editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
+                    editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
+                    editID:info.event.id
+                })
             })
-            this.setState({
-                editPopup:true,
-                edit:info,
-                editTitle:info.event.title,
-                editStart:info.event.start.toLocaleDateString() + " | " + info.event.start.toLocaleTimeString(),
-                editEnd:info.event.end.toLocaleDateString() + " | " + info.event.end.toLocaleTimeString(),
-                editID:info.event.id
-            })
-        })
+        }
     }
 
     deleteEscale=async ()=>{
@@ -207,6 +235,28 @@ class Calendar extends React.Component {
         })
     }
 
+    setReason=(e)=>{
+
+        e.preventDefault()
+        const target = e.target;
+        const value = target.value;
+        this.setState({
+            reason:value,
+        })
+    }
+
+    saveConfirmed=(e)=>{
+        const body={
+            confirmado : this.state.isConfirmed,
+            notas:this.state.reason
+        }
+        console.log(body)
+        api.patchEscalaConfirm(body,this.state.editID).then(result=>{
+            window.location.reload()
+        })
+    }
+
+
     render() {
             if(this.state.loading){
                 return (<> loading </>)
@@ -233,7 +283,6 @@ class Calendar extends React.Component {
                             events={this.state.escalas}
                             loading={this.state.loading}
                             eventSources={this.state.escalas}
-                            eventBackgroundColor={'#7875B5'}
                             eventBorderColor={'#4C489D'}
                             eventClick={(info)=>{this.edit(info)}}
                         />
@@ -289,6 +338,14 @@ class Calendar extends React.Component {
                                             </th>
                                         </tr>
                                         <tr>
+                                            <th>
+                                                Confirmed:
+                                                <Switch variant={'outlined'} defaultChecked={this.state.isConfirmed} disabled={true}></Switch>
+                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} value={this.state.selectedReason} disabled={true}></TextField>
+
+                                            </th>
+                                        </tr>
+                                        <tr>
                                             <th className={'Cell'}>
                                                 <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
                                             </th>
@@ -304,7 +361,7 @@ class Calendar extends React.Component {
                                 <h1 className={'Title'}>Edit Escale</h1>
                                 <h3>{this.state.editTitle}</h3>
                                 <hr className={'Separator'}/>
-                                <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
+                                <form onSubmit={(e)=>{e.preventDefault();this.saveConfirmed(e)}}>
                                     <table className={'Table'}>
                                         <tr>
                                             <th className={'Cell'}>
@@ -319,13 +376,13 @@ class Calendar extends React.Component {
                                                 Confirmed:
                                                 <Switch label={'Admin:'} variant={'outlined'} defaultChecked={this.state.isConfirmed} onClick={() => this.setConfirmed}
                                                         name={'admin'}></Switch>
-                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} onChange={(e) => this.setReason(e)}></TextField>
+                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} value={this.state.selectedReason} onChange={(e) => this.setReason(e)}></TextField>
 
                                             </th>
                                         </tr>
                                         <tr>
                                             <th className={'Cell'}>
-                                                <Button variant={"outlined"} color={"success"} onClick={()=>this.close()} >Save</Button>
+                                                <Button variant={"outlined"} color={"success"} type={'Submit'} >Save</Button>
                                             </th>
                                             <th className={'Cell'}>
                                                 <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Close</Button>
