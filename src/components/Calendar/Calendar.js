@@ -193,31 +193,33 @@ class Calendar extends React.Component {
                 } else {
 
                     if (this.state.selectedUsers[0] === undefined) {
+                        stopFunc=true
                         alert('Select at least 1 User')
-
-                    } else {
-
-                        let users = []
-                        this.state.selectedUsers.forEach(result => {
-                            users.push(result.label + " ")
-                        })
-                        let Escale = {
-                            confirmado: true,
-                            users: users,
-                            notas: " ",
-                            inicio: this.state.Start,
-                            fim: this.state.End
-                        }
-
-                        if(stopFunc===false){
-                        api.postEscala(Escale).then((result)=>{
-                            window.location.reload()}
-                        )}
                     }
 
                 }
-
             })
+                if(!stopFunc){
+
+                    let users = []
+                    this.state.selectedUsers.forEach(result => {
+                        users.push(result.label + " ")
+                    })
+                    let Escale = {
+                        confirmado: true,
+                        users: users,
+                        notas: " ",
+                        inicio: this.state.Start,
+                        fim: this.state.End
+                    }
+
+                    if(stopFunc===false){
+                        api.postEscala(Escale).then((result)=>{
+                            window.location.reload()}
+                        )}
+                }
+
+
         }
         catch (e){
             if (e !== Break) throw e
@@ -392,33 +394,6 @@ class Calendar extends React.Component {
                                 </form>
                             </Popup>
                         )}
-=======
-                        <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
-                            <h1 className={'Title'}>Edit Escale</h1>
-                            <h3>{this.state.editTitle}</h3>
-                            <hr className={'Separator'}/>
-                            <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
-                            <table className={'Table'}>
-                                <tr>
-                                    <th className={'Cell'}>
-                                        <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
-                                    </th>
-                                    <th className={'Cell'}>
-                                        <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className={'Cell'}>
-                                        <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
-                                    </th>
-                                    <th className={'Cell'}>
-                                        <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
-                                    </th>
-                                </tr>
-                            </table>
-                            </form>
-                            
-                        </Popup>
                         <button onClick={this.loggout}>Logout</button>
                     </main>
                 )
