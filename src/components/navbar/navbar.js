@@ -8,7 +8,7 @@ import {
   NavMenu,
   NavBtn,
   NavBtnLink,
-} from "./navbarstyle";
+} from "./navbarstyle.js";
 import {withRouter} from "../hooks";
 
 
@@ -23,15 +23,17 @@ class NavBar extends React.Component {
   }
 
   checkLog=()=>{
-    if(localStorage.getItem('token') === ''){
-      return false
+    let dados=localStorage.getItem('token');
+    if(dados ==''){
+      return false 
     } else {
       return true
     }
+    
   }
-
   loggin=()=> {
     if (this.state.isLoggedIn() === true) {
+      this.setState(this.isLoggedIn)
     }
   }
 
@@ -65,7 +67,7 @@ class NavBar extends React.Component {
               Calendar
             </NavLink>
             <NavBtn>
-              <NavBtnLink to={'/user/login'} onClick={this.loggin()} >{(this.state.isLoggedIn() === true)?('Log Out'):('Log In')}</NavBtnLink>
+              <NavBtnLink to={'/user/login'} onClick={this.checkLog()} >{(this.state.isLoggedIn() === true)?('Log Out'):('Log In')}</NavBtnLink>
             </NavBtn>
           </NavMenu>
         </Nav>

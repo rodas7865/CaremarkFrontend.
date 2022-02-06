@@ -5,16 +5,21 @@ import Login from '../src/components/login/login'
 import { BrowserRouter as Router,Routes,Route, NavLink } from "react-router-dom";
 import NavBar from './components/navbar/navbar';
 import User from "./components/Users/User";
+import Home from './components/home/home';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: true,
+     user:{},
     };
   }
-
+  updateUser = (user) => {
+    this.setState({
+      user,
+    });
+  };
 
   render() {
   
@@ -22,9 +27,10 @@ class App extends React.Component {
       <div className="container">
         
         <Router>
-          <NavBar isLoggedIn={this.state.isLoggedIn}/>
+        <NavBar isLoggedIn={this.state.isLoggedIn}/>
           <Routes>
-            <Route path={"*"} element={<Login isLoggedIn={this.state.isLoggedIn} path="/users/login"></Login>}/>
+            <Route path={"*"} element={<Login user={this.state.user} updateUser={this.updateUser} path="/users/login"></Login>}/>
+            <Route path={"/dashboard"} element={<Home></Home>}/>
             <Route exact path={'/calendar'} element={<Calendar></Calendar>}/>
             <Route exact path={'/users'} element={<User></User>}/>
           </Routes>

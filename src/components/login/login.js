@@ -2,7 +2,8 @@
 import './login.css'
 import React, { useState } from 'react';
 import api from '../../Api';
-import {withRouter} from "../hooks";
+import { withRouter } from "../hooks";
+import { Navigate } from "react-router-dom";
 
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -12,39 +13,46 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error:"",
+            error: "",
             form_login: {
                 email: "",
                 password: ""
-            }
+            },
         }
 
 
     }
-
+    
     updateField = (e) => {
         var form_login = this.state.form_login;
         form_login[e.target.name] = e.target.value;
         this.setState({ form_login });
     }
 
-    submit=async (e,)=>{
+    submit = async (e,) => {
         e.preventDefault();
-        const data={email:this.state.form_login.email,password:this.state.form_login.password
+        const data = {
+            email: this.state.form_login.email, password: this.state.form_login.password
         }
         await api.loginUser(data)
         localStorage.getItem('token')
+<<<<<<< Updated upstream
         try{
+=======
+        console.log(localStorage.getItem('token'))
+        try {
+>>>>>>> Stashed changes
             await api.loginUser(data)
             localStorage.getItem('token')
             this.props.navigate('/calendar')
-            this.props.isLoggedIn=false
-        }catch (err){
-            this.setState({error:"Password ou Email errado"})
+            
+        } catch (err) {
+            this.setState({ error: "Password ou Email errado" })
         }
+    
        
     }
-   
+
 
     render() {
         return (
@@ -60,7 +68,7 @@ class App extends React.Component {
                                 <i class=""></i>
                                 <input type="password" name='password' value={this.state.form_login.password} class="login__input" placeholder="Palavra-Passe" onChange={(e) => this.updateField(e)}></input>
                             </div>
-                            <p className={'ErrorMensage'}>{(this.state.error==="")?(""):(this.state.error)}</p>
+                            <p className={'ErrorMensage'}>{(this.state.error === "") ? ("") : (this.state.error)}</p>
                             <button onClick={this.submit} class="button login__submit">
                                 <span class="button__text">Login</span>
                                 <i class=""></i>

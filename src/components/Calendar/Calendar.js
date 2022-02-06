@@ -53,6 +53,7 @@ class Calendar extends React.Component {
                 let decode=JSON.parse(atob(localStorage.getItem('token').split('.')[1])),
                     userId=decode.userid
                 api.getUser(userId).then(result=>{
+                    console.log("User Id"+ userId)
                     this.setState({
                         isAdmin:result.admin
                     })
@@ -196,6 +197,9 @@ class Calendar extends React.Component {
         }
 
     }
+    loggout=()=>{
+        localStorage.clear();
+    }
 
     setConfirmed=()=>{
         this.setState({
@@ -268,6 +272,7 @@ class Calendar extends React.Component {
                                 </table>
                             </form>
                         </Popup>
+<<<<<<< Updated upstream
                         {(this.state.isAdmin)?(
                             <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
                                 <h1 className={'Title'}>Edit Escale</h1>
@@ -330,6 +335,35 @@ class Calendar extends React.Component {
                                 </form>
                             </Popup>
                         )}
+=======
+                        <Popup open={this.state.editPopup===true} onClose={this.close} closeOnDocumentClick={false} modal>
+                            <h1 className={'Title'}>Edit Escale</h1>
+                            <h3>{this.state.editTitle}</h3>
+                            <hr className={'Separator'}/>
+                            <form onSubmit={(e)=>{e.preventDefault();this.deleteEscale(e)}}>
+                            <table className={'Table'}>
+                                <tr>
+                                    <th className={'Cell'}>
+                                        <TextField label={'Start:'} variant={'outlined'} value={this.state.editStart} disabled={true} className={'Table'}></TextField>
+                                    </th>
+                                    <th className={'Cell'}>
+                                        <TextField label={'End:'} variant={'outlined'} value={this.state.editEnd} disabled={true}></TextField>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th className={'Cell'}>
+                                        <Button type={'Submit'} variant={"outlined"} color={"error"}>Delete</Button>
+                                    </th>
+                                    <th className={'Cell'}>
+                                        <Button variant={"outlined"} color={"error"} onClick={()=>this.close()} >Cancel</Button>
+                                    </th>
+                                </tr>
+                            </table>
+                            </form>
+                            
+                        </Popup>
+                        <button onClick={this.loggout}>Logout</button>
+>>>>>>> Stashed changes
                     </main>
                 )
             }

@@ -1,8 +1,6 @@
 const   BASE_URL = 'https://caremark.herokuapp.com/'
 
 export default {
-    
-  
     getUsers: async function(body){
         let response = await fetch(BASE_URL+'users/',{
             method:'GET',

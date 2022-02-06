@@ -3,8 +3,10 @@ import { NavLink as Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Nav = styled.nav`
-    background-image: linear-gradient(to right top, #5d54a4, #655da9, #6c66ae, #746fb3, #7c78b8);;
+    background-image: linear-gradient( #5d54a4, #655da9, #6c66ae, #746fb3, #7c78b8);;
     height: 85px;
+    width:2000px;
+    margin-left:-400px;
     display: flex;
     margin-left:-100px;
     justify-content: space-between;
@@ -51,7 +53,6 @@ export const NavMenu = styled.div`
   display: flex;
   align-items: center;
   margin-right: -24px;
-
   @media screen and (max-width: 768px) {
     display: none;
   }
