@@ -25,6 +25,9 @@ class Home extends React.Component {
 
         const firstDay=new Date(currentDate.setDate(first)),
             lastDay=new Date(currentDate.setDate(last))
+            this.setState({
+                loading:false
+            })
 
         console.log(firstDay + " " + lastDay)
     }

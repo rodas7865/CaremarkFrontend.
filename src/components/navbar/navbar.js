@@ -9,38 +9,50 @@ import {
   NavBtn,
   NavBtnLink,
 } from "./navbarstyle.js";
-import {withRouter} from "../hooks";
+import { withRouter } from "../hooks";
+import api from '../../Api.js';
 
 
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: this.checkLog,
+      isLoggedIn: false,
     };
 
 
   }
 
-  checkLog=()=>{
-    let dados=localStorage.getItem('token');
-   
-    if(dados !==''){
-      return  console.log("login"+dados),false
-    } else {
-      return console.log("logout"+dados),true
-    }
+  login = () => {
+    api.getUsers().then(result => {
+      if (result === 'Acesso Negado') {
+        return this.setState({ isLoggedIn: true })
+      } else {
+        return this.setState({ isLoggedIn: false })
+      }
+    })
+  }
+  logout = () => {
+    localStorage.clear();
+    window.location.reload(1);
+  }
+  componentDidMount() {
+    //vai para component didmount
+    this.login();
   }
 
-  loggin=()=> {
-    if (this.state.isLoggedIn() === true) {
-      this.setState(this.isLoggedIn)
-    }
-    console.log("Login"+this.state.isLoggedIn)
-  }
+
+
+
 
 
   render() {
+    let acao
+    if (this.state.isLoggedIn) {
+      acao = <NavBtnLink to={'/user/login'} >Log In</NavBtnLink>
+    } else {
+      acao = <NavBtnLink to={'/user/login'} onClick={this.logout}>Log Out</NavBtnLink>
+    }
     return (
       <>
         <Nav>
@@ -69,7 +81,7 @@ class NavBar extends React.Component {
               Calendar
             </NavLink>
             <NavBtn>
-              <NavBtnLink to={'/user/login'} onClick={this.checkLog()}  >{(this.loggin() === true)?('Log Out'):('Log In')}</NavBtnLink>
+              {acao}
             </NavBtn>
           </NavMenu>
         </Nav>
@@ -77,6 +89,8 @@ class NavBar extends React.Component {
     );
   }
 
+  
 }
+
 
 export default withRouter(NavBar);

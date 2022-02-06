@@ -110,7 +110,7 @@ export default {
         })
         let data = response.headers.get('Authorization')
 
-        console.log(data)
+        console.log("LoginUser "+data)
         localStorage.setItem('token',data)
         return data
     },

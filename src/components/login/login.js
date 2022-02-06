@@ -41,6 +41,7 @@ class App extends React.Component {
             await api.loginUser(data)
             localStorage.getItem('token')
             this.props.navigate('/calendar')
+            window.location.reload();
             
         } catch (err) {
             this.setState({ error: "Password ou Email errado" })
