@@ -24,8 +24,8 @@ class NavBar extends React.Component {
 
   checkLog=()=>{
     let dados=localStorage.getItem('token');
-    console.log(dados)
-    if(dados ===''){
+   
+    if(dados !==''){
       return  console.log("login"+dados),false
     } else {
       return console.log("logout"+dados),true
