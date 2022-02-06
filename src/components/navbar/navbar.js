@@ -16,7 +16,7 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: this.checkLog
+      isLoggedIn: this.checkLog,
     };
 
 
@@ -24,17 +24,19 @@ class NavBar extends React.Component {
 
   checkLog=()=>{
     let dados=localStorage.getItem('token');
-    if(dados ==''){
-      return false 
+    console.log(dados)
+    if(dados ===''){
+      return  console.log("login"+dados),false
     } else {
-      return true
+      return console.log("logout"+dados),true
     }
-    
   }
+
   loggin=()=> {
     if (this.state.isLoggedIn() === true) {
       this.setState(this.isLoggedIn)
     }
+    console.log("Login"+this.state.isLoggedIn)
   }
 
 
@@ -67,7 +69,7 @@ class NavBar extends React.Component {
               Calendar
             </NavLink>
             <NavBtn>
-              <NavBtnLink to={'/user/login'} onClick={this.checkLog()} >{(this.state.isLoggedIn() === true)?('Log Out'):('Log In')}</NavBtnLink>
+              <NavBtnLink to={'/user/login'} onClick={this.checkLog()}  >{(this.loggin() === true)?('Log Out'):('Log In')}</NavBtnLink>
             </NavBtn>
           </NavMenu>
         </Nav>
