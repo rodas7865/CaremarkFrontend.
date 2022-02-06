@@ -1,0 +1,26 @@
+.Title{
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.Dashboard{
+    margin-right: auto;
+    margin-left: auto;
+    background-color: rgba(255,255,255,0.8);
+    border: #6A679E 3px solid ;
+    border-radius: 3px;
+    border-collapse: separate;
+}
+.Cell{
+    width: 500px;
+    height: 70px;
+    text-align: center;
+}
+.expose{
+    font-size: 100px;
+    font-weight: normal;
+    color: #6A679E;
+}
