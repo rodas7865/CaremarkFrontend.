@@ -206,6 +206,7 @@ class Employeelist extends React.Component {
       return (<> loading </>)
     } else {
         return (
+          <div className='user_container'>
             <div style={{height: 400, width: '100%',}}>
               <p id={'T'}><h2>Employees List</h2></p>
               <Button id={'button'} variant={"outlined"} color={"success"} onClick={() => this.newPopup()}>New
@@ -289,6 +290,7 @@ class Employeelist extends React.Component {
                   </table>
                 </form>
               </Popup>
+            </div>
             </div>)
       }
 

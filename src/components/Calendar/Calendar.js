@@ -394,7 +394,7 @@ class Calendar extends React.Component {
                                 </form>
                             </Popup>
                         )}
-                        <button onClick={this.loggout}>Logout</button>
+            
                     </main>
                 )
             }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Row, Form, Col, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import '../Users/adduser.css'
 const BaseapiUrl = 'http://virtualsolution.adequateshop.com:168';
 class Addemployee extends Component {
   constructor(props) {

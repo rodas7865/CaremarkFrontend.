@@ -56,8 +56,8 @@ class NavBar extends React.Component {
     return (
       <>
         <Nav>
-          <NavLogo to="/">
-            Logo
+          <NavLogo to="/dashboard">
+            CareMark
           </NavLogo>
           <Bars />
 

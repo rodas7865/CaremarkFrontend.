@@ -18,6 +18,9 @@ export const NavLogo = styled(Link)`
   color: #fff;
   font-size: 2rem;
   text-decoration: none;
+  &:hover {
+    color: black;
+  }
 
 `;
 
