@@ -37,7 +37,7 @@ class NavBar extends React.Component {
     window.location.reload(1);
   }
   componentDidMount() {
-    //vai para component didmount
+
     this.login();
   }
 
