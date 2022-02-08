@@ -40,7 +40,7 @@ class App extends React.Component {
         try {
             await api.loginUser(data)
             localStorage.getItem('token')
-            this.props.navigate('/calendar')
+            this.props.navigate('/dashboard')
             window.location.reload();
             
         } catch (err) {

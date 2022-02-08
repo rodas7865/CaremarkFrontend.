@@ -210,7 +210,7 @@ export default {
                 },
                 body:JSON.stringify(body)
             })
-            let data = (response.status===403)?(await response.text()):(await response.json())
+            let data = await response.text()
 
             return data
         },

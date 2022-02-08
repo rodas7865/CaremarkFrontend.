@@ -231,7 +231,8 @@ class Calendar extends React.Component {
         localStorage.clear();
     }
 
-    setConfirmed=()=>{
+    setConfirmed=(e)=>{
+        e.preventDefault()
         this.setState({
             isConfirmed:!this.state.isConfirmed
         })
@@ -376,10 +377,13 @@ class Calendar extends React.Component {
                                         <tr>
                                             <th>
                                                 Confirmed:
-                                                <Switch label={'Admin:'} variant={'outlined'} defaultChecked={this.state.isConfirmed} onClick={() => this.setConfirmed}
+                                                <Switch label={'Admin:'} defaultChecked={this.state.isConfirmed} variant={'outlined'} onChange={(e) => this.setConfirmed(e)}
                                                         name={'admin'}></Switch>
-                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} value={this.state.selectedReason} onChange={(e) => this.setReason(e)}></TextField>
-
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <TextField label={'Reason:'} variant={'outlined'} fullWidth multiline maxRows={'5'} placeholder={this.state.selectedReason} onChange={(e) => this.setReason(e)}></TextField>
                                             </th>
                                         </tr>
                                         <tr>
