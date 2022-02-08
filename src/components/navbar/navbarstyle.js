@@ -5,13 +5,13 @@ import styled from "styled-components";
 export const Nav = styled.nav`
     background-image: linear-gradient( #5d54a4, #655da9, #6c66ae, #746fb3, #7c78b8);;
     height: 85px;
-    width:2000px;
-    margin-left:-400px;
+    width:100%;
     display: flex;
+    margin-bottom: 60px;
     justify-content: space-between;
     align-items: center;
-    padding: 0.2rem calc((100vw - 1000px) / 2);
-    z-index: 12;
+    padding: 0px 100px 0;
+    z-index:1 ;
 `;
 export const NavLogo = styled(Link)`
   cursor: pointer;

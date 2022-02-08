@@ -1,7 +1,7 @@
 
 import React, { useReducer, useState } from 'react';
 import Calendar from './components/Calendar/Calendar';
-import Login from '../src/components/login/login'
+import Login from '../src/components/login/login.js'
 import { BrowserRouter as Router,Routes,Route, NavLink } from "react-router-dom";
 import NavBar from './components/navbar/navbar';
 import User from "./components/Users/User";
